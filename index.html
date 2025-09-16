@@ -3,66 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Third Ear</title>
+    <title>Third Ear - Organizing the Spoken and Unspoken</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
+            padding: 30px 0;
+            position: relative;
+            z-index: 10;
         }
-        img {
-            max-width: 200px;
-            margin-bottom: 20px;
+
+        .logo {
+            font-size: 48px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .content {
-            max-width: 600px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
+
+        .team-tab {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
-        .content p {
-            text-align: justify;
+
+        .team-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .company-description {
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .company-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .company-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .company-details {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.8;
+            margin-bottom: 50px;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .team-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .team-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+        }
+
+        .team-overlay.active .team-content {
+            transform: translateY(0);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .team-title {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .founders {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .founder {
+            text-align: center;
+        }
+
+        .founder-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .founder-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+}
+        .founder-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .founder-title {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .founder-bio {
+            font-size: 0.95rem;
             line-height: 1.6;
+            opacity: 0.7;
         }
-        .footer {
-            margin-top: 20px;
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .footer a {
-            text-decoration: none;
-            color: #007BFF;
+
+        @media (max-width: 768px) {
+            .company-title {
+                font-size: 2.5rem;
+            }
+            
+            .founders {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .team-content {
+                padding: 30px 20px;
+            }
+            
+            .founder-image {
+                width: 120px;
+                height: 120px;
+                font-size: 50px;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="ear3logo.png" alt="Third Ear Logo">
-    <div class="content">
-        <center>
-        <h1 style="color: #CC5500;">The 3<sup>rd</sup> Ear</h1>
-        <h3>
-            A platform for building fluid, goal-directed voice interviewers
-        </h3>
-        </center>
-        <p>
-            <ul>
-            <li>Face-to-face interviews yield more accurate and comprehensive data than surveys, but are time-consuming to conduct and expensive to analyze.</li>
-            <li>By focusing on interviewing rather than offering answers or advice, we minimize the risks of AI hallucinations and bias.</li>
-            <li>The platform orchestrates adaptive, goal-directed dialogue to produce rich interview data, enabling organizations to gain deeper insights and more accurate data than ever before.</li>
-            </ul>               
-        </p>
-        <center>
-        <p>Contact hello@ear3.ai to schedule a demo and use our interviewers in production</p>
-        </center>
+    <div class="container">
+        <header class="header">
+            <div class="logo">Third Ear</div>
+            <div class="team-tab" onclick="openTeamOverlay()">Meet the Team</div>
+        </header>
+
+        <main class="main-content">
+            <div class="company-description">
+                <h1 class="company-title">Organizing the <em>Spoken</em> and <em>Unspoken</em></h1>
+                <p class="company-details">
+                    Third Ear is building the new platform for collecting data about human beliefs, attitudes, and preferences. A researcher's knowledge quest starts with our powerful <em>empirical artificial respondents</em> (EARs), which give carefully calibrated answers to survey-style questions. If that's not enough, you can use your proprietary insights data to create your own EARs. If there are still gaps in your knowledge, we'll create the survey or interview you need to fill those gaps and run it using our best-in-class survey and interview agents.</p>
+                <p class="company-details">This workflow empowers rapid and accurate research on human beliefs, attitudes, and preferences, but Third Ear is much more than a tool. We're carefully <em>cataloging the spoken word</em> and <em>unearthing the unspoken context</em> that LLMs can't see. The majority of human conversation flits around the unspoken context of shared assumptions and beliefs that are rarely if ever spoken and therefore invisible to LLMs. We're bringing this knowledge to our platform to supercharge human insights research.</p>
+            
+                <button onclick="window.location.href='mailto:jon@thirdear.co'"class="cta-button">Get in Touch</button>
+            </div>
+        </main>
     </div>
-    <div class="footer">
-        <a href="https://system2.ai/p/system-2-is-what-we-need">Our Philosophy</a>
+
+    <div class="team-overlay" id="teamOverlay">
+        <div class="team-content">
+            <button class="close-button" onclick="closeTeamOverlay()">&times;</button>
+            <h2 class="team-title">Our Founding Team</h2>
+            <div class="founders">
+                <div class="founder">
+                    <div class="founder-image"><img src="jon_atwell.jpg" alt="Jon Atwell"></div>
+                    <h3 class="founder-name">Jon Atwell </h3>
+                    <p class="founder-title">Co-Founder & CEO</p>
+                    <p class="founder-bio">Dr. Atwell is a leading computational social scientist and former professor at Stanford GSB. An expert on simulations, he recently has been working on extracting the social knowledge embedded in LLMs.
+                    </p>
+                </div>
+                <div class="founder">
+                    <div class="founder-image"><img src="praveen_paritosh.jpg" alt="Praveen Paritosh"></div>
+                    <h3 class="founder-name">Praveen Paritosh</h3>
+                    <p class="founder-title">Co-Founder & CTO</p>
+                    <p class="founder-bio">Dr. Paritosh is a leading AI researcher and the creator of the knowledge graph that powers 50% of Google’s top search results. He was also an early leader of Google’s AI team and founded MLCommons’ Data group.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function openTeamOverlay() {
+            document.getElementById('teamOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTeamOverlay() {
+            document.getElementById('teamOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close overlay when clicking outside the content
+        document.getElementById('teamOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTeamOverlay();
+            }
+        });
+
+        // Close overlay with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTeamOverlay();
+            }
+        });
+    </script>
 </body>
 </html>
